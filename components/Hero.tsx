@@ -1,64 +1,54 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Lock, Users } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 export function Hero() {
     return (
-        <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-            {/* Background Elements */}
-            <div className="absolute inset-0 -z-10">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-zinc-100 to-transparent dark:from-zinc-900/50 rounded-full blur-3xl opacity-50" />
-            </div>
-
-            <div className="container mx-auto px-6 text-center">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+        <section className="bg-gradient-to-b from-white to-[#F1F5F9] pt-16 pb-20 text-center border-b border-border-grey">
+            <div className="container mx-auto px-6">
+                <motion.span
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-8"
+                    className="inline-block bg-[rgba(205,127,50,0.1)] text-antique-copper px-3 py-1 rounded text-xs uppercase tracking-widest font-semibold border border-[rgba(205,127,50,0.2)] mb-4"
                 >
-                    <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                    </span>
-                    Secure Vault & Advisor Network
-                </motion.div>
+                    MVP Beta Access
+                </motion.span>
 
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.1 }}
-                    className="text-5xl md:text-7xl font-bold tracking-tight text-zinc-900 dark:text-white mb-6 max-w-4xl mx-auto"
+                    className="text-[3rem] leading-[1.1] font-bold font-serif text-oxford-blue mb-4"
                 >
-                    The Digital Family Office <br />
-                    <span className="text-zinc-400 dark:text-zinc-600">for the Modern Era</span>
+                    The Secure Vault for<br />Interconnected Wealth.
                 </motion.h1>
 
                 <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
-                    className="text-lg md:text-xl text-zinc-600 dark:text-zinc-400 mb-10 max-w-2xl mx-auto leading-relaxed"
+                    className="text-[1.1rem] text-text-slate max-w-[600px] mx-auto mb-8"
                 >
-                    Securely transmit sensitive information to your financial advisors, lawyers, and accountants through a Web3-encrypted vault.
+                    A unified digital family office. Seamlessly connect your trusted circle—Lawyers, Accountants, and Realtors—to a single source of truth.
                 </motion.p>
 
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
-                    className="flex flex-col sm:flex-row items-center justify-center gap-4"
+                    className="mt-8"
                 >
-                    <button className="h-12 px-8 rounded-full bg-black dark:bg-white text-white dark:text-black font-medium hover:opacity-90 transition-opacity flex items-center gap-2">
-                        <Lock className="w-4 h-4" />
-                        Enter Vault
+                    <button
+                        onClick={() => signIn("google")}
+                        className="bg-white border border-[#DADCE0] text-[#3C4043] px-6 py-3 rounded font-medium inline-flex items-center gap-3 shadow-sm hover:shadow-md hover:bg-[#F8FAFC] transition-all"
+                    >
+                        <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="M17.64 9.2c0-.637-.057-1.252-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4" /><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.715H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853" /><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05" /><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335" /></svg>
+                        Continue with Google
                     </button>
-                    <button className="h-12 px-8 rounded-full bg-zinc-100 dark:bg-zinc-900 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-800 font-medium hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors flex items-center gap-2">
-                        <Users className="w-4 h-4" />
-                        Explore Network
-                        <ArrowRight className="w-4 h-4" />
-                    </button>
+                    <p className="text-[0.8rem] mt-4 text-[#94A3B8]">
+                        <span className="text-success-green">●</span> Auditable Security. No Credit Card for Clients.
+                    </p>
                 </motion.div>
             </div>
         </section>

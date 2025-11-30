@@ -1,19 +1,17 @@
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
+import { TrustSection } from "@/components/TrustSection";
+import { AdvisorSection } from "@/components/AdvisorSection";
+import { Footer } from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white dark:bg-black selection:bg-zinc-200 dark:selection:bg-zinc-800">
+    <main className="min-h-screen bg-paper-white selection:bg-antique-copper selection:text-white">
       <Navbar />
       <Hero />
-
-      {/* Placeholder for other sections */}
-      <div id="features" className="h-screen bg-zinc-50 dark:bg-zinc-900/50 flex items-center justify-center">
-        <p className="text-zinc-500">Features Section (Coming Soon)</p>
-      </div>
-      <div id="network" className="h-screen bg-white dark:bg-black flex items-center justify-center">
-        <p className="text-zinc-500">Network Section (Coming Soon)</p>
-      </div>
+      <TrustSection />
+      <AdvisorSection />
+      <Footer />
     </main>
   );
 }

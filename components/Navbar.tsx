@@ -3,68 +3,79 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Menu, X, Shield } from "lucide-react";
+import { Menu, X, LogIn, LogOut, User } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { signIn, signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 
 export function Navbar() {
-    const [isScrolled, setIsScrolled] = useState(false);
+    const { data: session } = useSession();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10);
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
     return (
-        <nav
-            className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-                isScrolled
-                    ? "bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800 py-4"
-                    : "bg-transparent py-6"
-            )}
-        >
-            <div className="container mx-auto px-6 flex items-center justify-between">
-                <Link href="/" className="flex items-center gap-2 group">
-                    <div className="p-2 bg-black dark:bg-white rounded-lg group-hover:scale-105 transition-transform">
-                        <Shield className="w-5 h-5 text-white dark:text-black" />
-                    </div>
-                    <span className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
-                        Advice Accord
-                    </span>
+        <nav className="bg-white border-b-[3px] border-antique-copper sticky top-0 z-50 shadow-sm h-[70px] flex items-center">
+            <div className="container mx-auto px-6 flex items-center justify-between h-full">
+                <Link href="/" className="font-serif text-[1.4rem] font-bold tracking-tight text-oxford-blue">
+                    Advice Accord.
                 </Link>
 
                 {/* Desktop Menu */}
                 <div className="hidden md:flex items-center gap-8">
                     <Link
-                        href="#features"
-                        className="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+                        href="#client-trust"
+                        className="text-[0.9rem] font-medium text-text-slate hover:text-oxford-blue transition-colors"
                     >
-                        Features
+                        The Vault
                     </Link>
                     <Link
-                        href="#network"
-                        className="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
+                        href="#advisors"
+                        className="text-[0.9rem] font-medium text-text-slate hover:text-oxford-blue transition-colors"
                     >
-                        Network
+                        For Advisors
                     </Link>
-                    <Link
-                        href="#security"
-                        className="text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors"
-                    >
-                        Security
-                    </Link>
-                    <button className="px-5 py-2.5 text-sm font-medium text-white bg-black dark:bg-white dark:text-black rounded-full hover:opacity-90 transition-opacity">
-                        Get Started
-                    </button>
+
+                    {session ? (
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-2">
+                                {session.user?.image ? (
+                                    <Image
+                                        src={session.user.image}
+                                        alt={session.user.name || "User"}
+                                        width={32}
+                                        height={32}
+                                        className="rounded-full border border-border-grey"
+                                    />
+                                ) : (
+                                    <div className="w-8 h-8 rounded-full bg-paper-white flex items-center justify-center border border-border-grey">
+                                        <User className="w-4 h-4 text-text-slate" />
+                                    </div>
+                                )}
+                                <span className="text-sm font-medium text-oxford-blue">
+                                    {session.user?.name}
+                                </span>
+                            </div>
+                            <button
+                                onClick={() => signOut()}
+                                className="p-2 text-text-slate hover:text-red-500 transition-colors"
+                                title="Sign Out"
+                            >
+                                <LogOut className="w-4 h-4" />
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => signIn("google")}
+                            className="bg-oxford-blue text-white px-4 py-2 rounded flex items-center gap-2 text-[0.9rem] hover:bg-deep-navy transition-colors"
+                        >
+                            <LogIn className="w-3.5 h-3.5" />
+                            Sign In
+                        </button>
+                    )}
                 </div>
 
                 {/* Mobile Menu Toggle */}
                 <button
-                    className="md:hidden p-2 text-zinc-600 dark:text-zinc-400"
+                    className="md:hidden p-2 text-text-slate"
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                     {isMobileMenuOpen ? <X /> : <Menu />}
@@ -75,36 +86,57 @@ export function Navbar() {
             <AnimatePresence>
                 {isMobileMenuOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -20 }}
+                        initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        className="absolute top-full left-0 right-0 bg-white dark:bg-black border-b border-zinc-200 dark:border-zinc-800 p-6 md:hidden shadow-xl"
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute top-full left-0 right-0 bg-white border-b border-border-grey p-6 md:hidden shadow-xl"
                     >
                         <div className="flex flex-col gap-4">
                             <Link
-                                href="#features"
-                                className="text-lg font-medium text-zinc-900 dark:text-white"
+                                href="#client-trust"
+                                className="text-lg font-medium text-oxford-blue"
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
-                                Features
+                                The Vault
                             </Link>
                             <Link
-                                href="#network"
-                                className="text-lg font-medium text-zinc-900 dark:text-white"
+                                href="#advisors"
+                                className="text-lg font-medium text-oxford-blue"
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
-                                Network
+                                For Advisors
                             </Link>
-                            <Link
-                                href="#security"
-                                className="text-lg font-medium text-zinc-900 dark:text-white"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                            >
-                                Security
-                            </Link>
-                            <button className="w-full py-3 text-base font-medium text-white bg-black dark:bg-white dark:text-black rounded-lg">
-                                Get Started
-                            </button>
+                            {session ? (
+                                <>
+                                    <div className="flex items-center gap-3 py-2 border-t border-border-grey mt-2 pt-4">
+                                        {session.user?.image && (
+                                            <Image
+                                                src={session.user.image}
+                                                alt={session.user.name || "User"}
+                                                width={32}
+                                                height={32}
+                                                className="rounded-full"
+                                            />
+                                        )}
+                                        <span className="font-medium text-oxford-blue">{session.user?.name}</span>
+                                    </div>
+                                    <button
+                                        onClick={() => signOut()}
+                                        className="w-full py-3 text-base font-medium text-red-500 bg-red-50 rounded-lg flex items-center justify-center gap-2"
+                                    >
+                                        <LogOut className="w-4 h-4" />
+                                        Sign Out
+                                    </button>
+                                </>
+                            ) : (
+                                <button
+                                    onClick={() => signIn("google")}
+                                    className="w-full py-3 text-base font-medium text-white bg-oxford-blue rounded flex items-center justify-center gap-2"
+                                >
+                                    <LogIn className="w-4 h-4" />
+                                    Sign In
+                                </button>
+                            )}
                         </div>
                     </motion.div>
                 )}
@@ -112,3 +144,4 @@ export function Navbar() {
         </nav>
     );
 }
+
