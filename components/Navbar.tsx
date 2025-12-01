@@ -1,15 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Menu, X, LogIn, LogOut, User } from "lucide-react";
+import { Menu, X, LogIn, LogOut, User, Wallet } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useWeb3Auth } from "@/context/Web3AuthProvider";
 import Image from "next/image";
 
 export function Navbar() {
-    const { data: session } = useSession();
+    const { loggedIn, login, logout, userInfo, isReady } = useWeb3Auth();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     return (
@@ -34,13 +34,13 @@ export function Navbar() {
                         For Advisors
                     </Link>
 
-                    {session ? (
+                    {loggedIn ? (
                         <div className="flex items-center gap-4">
                             <div className="flex items-center gap-2">
-                                {session.user?.image ? (
+                                {userInfo?.profileImage ? (
                                     <Image
-                                        src={session.user.image}
-                                        alt={session.user.name || "User"}
+                                        src={userInfo.profileImage}
+                                        alt={userInfo.name || "User"}
                                         width={32}
                                         height={32}
                                         className="rounded-full border border-border-grey"
@@ -50,12 +50,18 @@ export function Navbar() {
                                         <User className="w-4 h-4 text-text-slate" />
                                     </div>
                                 )}
-                                <span className="text-sm font-medium text-oxford-blue">
-                                    {session.user?.name}
-                                </span>
+                                <div className="flex flex-col">
+                                    <span className="text-sm font-medium text-oxford-blue leading-none">
+                                        {userInfo?.name || "User"}
+                                    </span>
+                                    <span className="text-[0.7rem] text-text-slate flex items-center gap-1">
+                                        <Wallet className="w-3 h-3" />
+                                        Connected
+                                    </span>
+                                </div>
                             </div>
                             <button
-                                onClick={() => signOut()}
+                                onClick={() => logout()}
                                 className="p-2 text-text-slate hover:text-red-500 transition-colors"
                                 title="Sign Out"
                             >
@@ -64,11 +70,18 @@ export function Navbar() {
                         </div>
                     ) : (
                         <button
-                            onClick={() => signIn("google")}
-                            className="bg-oxford-blue text-white px-4 py-2 rounded flex items-center gap-2 text-[0.9rem] hover:bg-deep-navy transition-colors"
+                            onClick={() => login()}
+                            disabled={!isReady}
+                            className={`bg-oxford-blue text-white px-4 py-2 rounded flex items-center gap-2 text-[0.9rem] transition-colors ${!isReady ? 'opacity-50 cursor-not-allowed' : 'hover:bg-deep-navy'}`}
                         >
-                            <LogIn className="w-3.5 h-3.5" />
-                            Sign In
+                            {isReady ? (
+                                <>
+                                    <LogIn className="w-3.5 h-3.5" />
+                                    Sign In
+                                </>
+                            ) : (
+                                "Loading..."
+                            )}
                         </button>
                     )}
                 </div>
@@ -106,22 +119,22 @@ export function Navbar() {
                             >
                                 For Advisors
                             </Link>
-                            {session ? (
+                            {loggedIn ? (
                                 <>
                                     <div className="flex items-center gap-3 py-2 border-t border-border-grey mt-2 pt-4">
-                                        {session.user?.image && (
+                                        {userInfo?.profileImage && (
                                             <Image
-                                                src={session.user.image}
-                                                alt={session.user.name || "User"}
+                                                src={userInfo.profileImage}
+                                                alt={userInfo.name || "User"}
                                                 width={32}
                                                 height={32}
                                                 className="rounded-full"
                                             />
                                         )}
-                                        <span className="font-medium text-oxford-blue">{session.user?.name}</span>
+                                        <span className="font-medium text-oxford-blue">{userInfo?.name || "User"}</span>
                                     </div>
                                     <button
-                                        onClick={() => signOut()}
+                                        onClick={() => logout()}
                                         className="w-full py-3 text-base font-medium text-red-500 bg-red-50 rounded-lg flex items-center justify-center gap-2"
                                     >
                                         <LogOut className="w-4 h-4" />
@@ -130,11 +143,18 @@ export function Navbar() {
                                 </>
                             ) : (
                                 <button
-                                    onClick={() => signIn("google")}
-                                    className="w-full py-3 text-base font-medium text-white bg-oxford-blue rounded flex items-center justify-center gap-2"
+                                    onClick={() => login()}
+                                    disabled={!isReady}
+                                    className={`w-full py-3 text-base font-medium text-white bg-oxford-blue rounded flex items-center justify-center gap-2 ${!isReady ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >
-                                    <LogIn className="w-4 h-4" />
-                                    Sign In
+                                    {isReady ? (
+                                        <>
+                                            <LogIn className="w-4 h-4" />
+                                            Sign In
+                                        </>
+                                    ) : (
+                                        "Loading..."
+                                    )}
                                 </button>
                             )}
                         </div>

@@ -1,7 +1,7 @@
 "use client";
 
-import { SessionProvider } from "next-auth/react";
+import { Web3AuthProvider } from "@/context/Web3AuthProvider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-    return <SessionProvider>{children}</SessionProvider>;
+    return <Web3AuthProvider>{children}</Web3AuthProvider>;
 }
