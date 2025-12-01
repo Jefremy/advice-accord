@@ -9,7 +9,7 @@ import { useWeb3Auth } from "@/context/Web3AuthProvider";
 import Image from "next/image";
 
 export function Navbar() {
-    const { loggedIn, login, logout, userInfo, isReady } = useWeb3Auth();
+    const { loggedIn, login, logout, userInfo, address, isReady } = useWeb3Auth();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     return (
@@ -23,7 +23,7 @@ export function Navbar() {
                 {/* Desktop Menu */}
                 <div className="hidden md:flex items-center gap-8">
                     <Link
-                        href="#client-trust"
+                        href={loggedIn ? "/vault" : "#client-trust"}
                         className="text-[0.9rem] font-medium text-slate-300 hover:text-white transition-colors"
                     >
                         The Vault
@@ -55,10 +55,20 @@ export function Navbar() {
                                     <span className="text-sm font-medium text-white leading-none">
                                         {userInfo?.name || "User"}
                                     </span>
-                                    <span className="text-[0.7rem] text-slate-400 flex items-center gap-1">
-                                        <Wallet className="w-3 h-3" />
-                                        Connected
-                                    </span>
+                                    <div className="relative group cursor-pointer">
+                                        <span className="text-[0.7rem] text-slate-400 flex items-center gap-1 font-mono group-hover:text-white transition-colors">
+                                            <Wallet className="w-3 h-3" />
+                                            {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Loading..."}
+                                        </span>
+                                        {address && (
+                                            <div className="absolute top-full left-0 mt-2 p-3 bg-slate-800 border border-slate-700 text-white text-xs rounded-md shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[200px]">
+                                                <div className="font-mono break-all mb-2 select-all">{address}</div>
+                                                <div className="text-[0.65rem] text-slate-400 uppercase tracking-wider font-semibold">
+                                                    Sepolia Testnet
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                             <button
